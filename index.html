@@ -155,6 +155,32 @@
             alert("Вітаємо! 🏆 Архітектура бази даних проєкту «ROAD-INFO» спроєктована ідеально. Усі типи даних обрано правильно, зв'язки типу 1:N налаштовано, цілісність даних забезпечено!");
           };
 
+          const handleSendResult = async () => {
+            const studentName = prompt("Введіть ваше Прізвище та Ім'я:");
+            if (!studentName || studentName.trim() === "") {
+              alert("⚠️ Надсилання скасовано: не вказано прізвище та ім'я.");
+              return;
+            }
+
+            try {
+              const response = await fetch("https://formspree.io/f/meaawkry", {
+                method: "POST",
+                headers: { "Accept": "application/json" },
+                body: JSON.stringify({ 
+                  Прізвище_Ім_я: studentName.trim(), 
+                  status: "Успішно виконано проєктування БД ROAD-INFO" 
+                })
+              });
+              if (response.ok) {
+                alert(`✅ Дякуємо, ${studentName.trim()}! Результат успішно надіслано викладачу на пошту.`);
+              } else {
+                alert("⚠️ Помилка відправки. Спробуйте ще раз.");
+              }
+            } catch (error) {
+              alert("⚠️ По мережі: не вдалося з'єднатися з сервером.");
+            }
+          };
+
           return (
             <div className="flex h-screen bg-[#0f172a] text-slate-100 font-sans overflow-hidden">
               <div className="flex-1 flex flex-col h-full overflow-y-auto p-6 relative">
@@ -183,22 +209,7 @@
 
                     {isTaskPassed && (
                       <button 
-                        onClick={async () => {
-                          try {
-                            const response = await fetch("https://formspree.io/f/meaawkry", {
-                              method: "POST",
-                              headers: { "Accept": "application/json" },
-                              body: JSON.stringify({ status: "Успішно виконано проєктування БД ROAD-INFO" })
-                            });
-                            if (response.ok) {
-                              alert("✅ Результат успішно надіслано викладачу на пошту!");
-                            } else {
-                              alert("⚠️ Помилка відправки. Спробуйте ще раз.");
-                            }
-                          } catch (error) {
-                            alert("⚠️ По мережі: не вдалося з'єднатися з сервером.");
-                          }
-                        }}
+                        onClick={handleSendResult}
                         className="bg-amber-600 hover:bg-amber-500 px-4 py-2 rounded text-sm font-semibold transition shadow text-white animate-pulse"
                       >
                         Результат надіслати викладачу ✉️
